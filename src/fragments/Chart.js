@@ -1,5 +1,5 @@
 import React from "react";
-import { ResponsiveContainer, LineChart, XAxis, YAxis, CartesianGrid, Line, Legend, Tooltip } from "recharts";
+import { ResponsiveContainer, LineChart, XAxis, YAxis, CartesianGrid, Line, Legend, Tooltip, ReferenceLine } from "recharts";
 
 import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
@@ -24,8 +24,17 @@ const Chart = ({ classes, chartData, linesArray, disabledLines, toggleLine }) =>
     return (
         <ResponsiveContainer width={'98%'} height={600}>
             <LineChart data={chartData} margin={{ top: 25, left: 0 }}>
-                <XAxis dataKey="name" tick={{ fontFamily: '"HK Grotesk Regular", Arial, sans-serif', fontSize: 14 }} />
-                <YAxis tick={{ fontFamily: '"HK Grotesk Regular", Arial, sans-serif', fontSize: 14 }} />
+                <XAxis
+                    dataKey="name"
+                    tick={{ fontFamily: '"HK Grotesk Regular", Arial, sans-serif', fontSize: 14 }}
+                    domain={['dataMin', 'dataMax']}
+                />
+                <YAxis
+                    tick={{ fontFamily: '"HK Grotesk Regular", Arial, sans-serif', fontSize: 14 }}
+                    domain={['dataMin', 'dataMax']}
+                />
+                <ReferenceLine x={0} stroke="#000" />
+                <ReferenceLine y={0} stroke="#000" />
                 <CartesianGrid stroke="#e5e5e5" strokeDasharray="5 5"/>
                 <Tooltip
                     formatter={(value, name) => null}
