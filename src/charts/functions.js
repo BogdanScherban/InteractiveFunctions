@@ -1,31 +1,34 @@
-export function getDefaultLine() {
+export function getDefaultLine(lineType) {
     let defaultLine = [];
-    for (let i = 0; i < 10; i++) {
-        defaultLine.push({
-            "name": i,
-            "oy": i
-        })
+
+    if (lineType === 'line') {
+        for (let i = -10; i <= 10; i++) {
+            defaultLine.push({
+                "name": i,
+                "oy": i
+            })
+        }
     }
+
+    if (lineType === 'parabola') {
+        for (let i = -10; i <= 10; i++) {
+            defaultLine.push({
+                "name": i,
+                "oy": Math.pow(i, 2)
+            })
+        }
+    }
+
     return defaultLine;
 }
 
-export function getDefaultLinesArray() {
-    return [
-        { dataKey: "oy", color: '#ffac5a', label: "y = x" }];
-}
-
-export function getAxisLabel(factor_K, factor_B) {
-    let result = "y = ";
-
-    if (Number(factor_K) !== 0) {
-        result += factor_K + "x";
-    } else {
-        return "y = " + factor_B;
+export function getDefaultLinesArray(lineType) {
+    let result = null;
+    if (lineType === 'line') {
+        result = { dataKey: "oy", color: '#ffac5a', label: "y = x" };
     }
-
-    if (Number(factor_B) !== 0) {
-        result += (factor_B > 0) ? (" + " + factor_B) : (" - " + Math.abs(factor_B));
+    if (lineType === 'parabola') {
+        result = { dataKey: "oy", color: '#ffac5a', label: "y = x^2" };
     }
-
-    return result;
+    return [result];
 }
