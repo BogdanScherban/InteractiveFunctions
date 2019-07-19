@@ -15,8 +15,13 @@ import Radio from '@material-ui/core/Radio';
 import LineChart from "./charts/LineChart";
 import ParabolaChart from "./charts/ParabolaChart";
 import HyperbolaChart from "./charts/HyperbolaChart";
+import CubeParabolaChart from "./charts/CubeParabolaChart";
+import RootChart from "./charts/RootChart";
 
 import { MAIN_COLOR } from "./constants";
+import { MAIN_TITLE, SECOND_TITLE } from "./constants/titles";
+import * as lineTypes from "./constants/lineTypes";
+
 
 const styles = theme => ({
     expansionPanel: {
@@ -36,9 +41,11 @@ const styles = theme => ({
 });
 
 const functionTypes = [
-    { value: 'line', label: 'Прямая' },
-    { value: 'parabola', label: 'Парабола' },
-    { value: 'hyperbola', label: 'Гипербола' }
+    { value: lineTypes.CHART_LINE,            label: lineTypes.CHART_LINE_LABEL,            chart: LineChart },
+    { value: lineTypes.CHART_SQUARE_PARABOLA, label: lineTypes.CHART_SQUARE_PARABOLA_LABEL, chart: ParabolaChart },
+    { value: lineTypes.CHART_CUBE_PARABOLA,   label: lineTypes.CHART_CUBE_PARABOLA_LABEL,   chart: CubeParabolaChart },
+    { value: lineTypes.CHART_HYPERBOLA,       label: lineTypes.CHART_HYPERBOLA_LABEL,       chart: HyperbolaChart },
+    { value: lineTypes.CHART_ROOT,            label: lineTypes.CHART_ROOT_LABEL,            chart: RootChart }
 ];
 
 class App extends Component {
@@ -46,7 +53,7 @@ class App extends Component {
     state = {
         isHeadingPanelOpen: true,
         isContentPanelOpen: true,
-        functionType: 'line'
+        functionType: lineTypes.CHART_LINE
     };
 
     toggleHeadingPanel = () => {
@@ -79,10 +86,12 @@ class App extends Component {
 
     getCurrentChartBlock = name => {
         let result = LineChart;
-        if (name === 'parabola') {
-            result = ParabolaChart;
-        } else if (name === 'hyperbola') {
-            result = HyperbolaChart;
+        for (let i = 0, n = functionTypes.length; i < n; i++) {
+            let item = functionTypes[i];
+            if (name === item.value) {
+                result = item.chart;
+                break;
+            }
         }
         return result;
     };
@@ -97,7 +106,7 @@ class App extends Component {
 
                 <ExpansionPanel className={classes.expansionPanel} expanded={isHeadingPanelOpen} onChange={() => this.toggleHeadingPanel()}>
                     <ExpansionPanelSummary className={classes.panelTitleBlock} expandIcon={<ExpandMoreIcon className={classes.expandIcon} />}>
-                        <Typography className={classes.panelTitle}>Выберите тип функции</Typography>
+                        <Typography className={classes.panelTitle}>{MAIN_TITLE}</Typography>
                     </ExpansionPanelSummary>
                     <ExpansionPanelDetails>
                         <FormGroup>
@@ -119,7 +128,7 @@ class App extends Component {
 
                 <ExpansionPanel className={classes.expansionPanel} expanded={isContentPanelOpen} onChange={() => this.toggleContentPanel()}>
                     <ExpansionPanelSummary className={classes.panelTitleBlock} expandIcon={<ExpandMoreIcon className={classes.expandIcon} />}>
-                        <Typography className={classes.panelTitle}>Тип функции: {currentFunctionName}</Typography>
+                        <Typography className={classes.panelTitle}>{SECOND_TITLE} {currentFunctionName}</Typography>
                     </ExpansionPanelSummary>
                     <ExpansionPanelDetails>
                         <ChartBlock />

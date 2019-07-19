@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+
 import get from "lodash/get";
 import { LocalForm } from 'react-redux-form';
 
@@ -15,7 +16,7 @@ import FactorInput from "../fragments/FactorInput";
 
 import { MAIN_COLOR, colorsArray } from "../constants";
 import { FORMULA_INPUTS } from "../constants/titles";
-import { CHART_LINE } from "../constants/lineTypes";
+import { CHART_CUBE_PARABOLA } from "../constants/lineTypes";
 
 const styles = {
     root: {
@@ -23,10 +24,25 @@ const styles = {
     },
 };
 
-const defaultLine = getDefaultLine(CHART_LINE);
-const defaultLinesArray = getDefaultLinesArray(CHART_LINE);
+const defaultLine = getDefaultLine(CHART_CUBE_PARABOLA);
+const defaultLinesArray = getDefaultLinesArray(CHART_CUBE_PARABOLA);
 
-class LineChartBlock extends Component  {
+const FormulaView = () => {
+    return (
+        <span>y = kx<sup>3</sup> + b</span>
+    )
+};
+
+const CurrentFormula = ({ formula }) => {
+    let formulaArray = formula.split('x^3');
+    let result = formula;
+    if (formulaArray.length === 2) {
+        result = <span>{formulaArray[0]}x<sup>3</sup> {formulaArray[1]}</span>
+    }
+    return result;
+};
+
+class ParabolaChart extends Component  {
 
     state = {
         FACTOR_K: 1,
@@ -51,7 +67,7 @@ class LineChartBlock extends Component  {
         let randomItem = Math.floor(Math.random() * (9 - 1) + 1);
         for (let i = -10, j = 0; i <= 10; i++) {
             let item = chartData[j];
-            item[dataKey] = Number(factor_K) * i + Number(factor_B);
+            item[dataKey] = Number(factor_K) * Math.pow(i, 3) + Number(factor_B);
             newLine.push(item);
             j++;
         }
@@ -59,7 +75,7 @@ class LineChartBlock extends Component  {
         linesArray.push({
             dataKey: dataKey,
             color: color,
-            label: this.getAxisLabel(factor_K, factor_B)
+            label: <CurrentFormula formula={this.getAxisLabel(factor_K, factor_B)} />
         });
         this.setState({
             chartData: newLine,
@@ -81,10 +97,20 @@ class LineChartBlock extends Component  {
         })
     };
 
+    cleanChart = () => {
+        this.setState({
+            FACTOR_K: 1,
+            FACTOR_B: 0,
+            chartData: getDefaultLine(CHART_CUBE_PARABOLA),
+            linesArray: getDefaultLinesArray(CHART_CUBE_PARABOLA),
+            disabledLines: [],
+        });
+    };
+
     getAxisLabel = (factor_K, factor_B) => {
         let result = "y = ";
         if (Number(factor_K) !== 0) {
-            result += (Number(factor_K) !== 1) ? (factor_K + "x") : "x";
+            result += (Number(factor_K) !== 1) ? (factor_K + "x^3") : "x^3";
         } else {
             return "y = " + factor_B;
         }
@@ -92,16 +118,6 @@ class LineChartBlock extends Component  {
             result += (factor_B > 0) ? (" + " + factor_B) : (" - " + Math.abs(factor_B));
         }
         return result;
-    };
-
-    cleanChart = () => {
-        this.setState({
-            FACTOR_K: 1,
-            FACTOR_B: 0,
-            chartData: getDefaultLine(CHART_LINE),
-            linesArray: getDefaultLinesArray(CHART_LINE),
-            disabledLines: [],
-        });
     };
 
     render() {
@@ -114,7 +130,7 @@ class LineChartBlock extends Component  {
                         <Chart chartData={chartData} linesArray={linesArray} disabledLines={disabledLines} toggleLine={this.toggleLine} />
                     </Grid>
                     <Grid item xs={12} md={6}>
-                        <FormulaBlock formulaView="y = kx + b" axisLabel={this.getAxisLabel(FACTOR_K, FACTOR_B)} />
+                        <FormulaBlock formulaView={<FormulaView />} axisLabel={<CurrentFormula formula={this.getAxisLabel(FACTOR_K, FACTOR_B)} />} />
                         <div>
                             <Typography variant="body1">{FORMULA_INPUTS}</Typography>
                             <LocalForm  model="functionParameters" onSubmit={values => this.submitForm(values)}>
@@ -141,5 +157,4 @@ class LineChartBlock extends Component  {
         )
     }
 };
-
-export default withStyles(styles)(LineChartBlock);
+export default withStyles(styles)(ParabolaChart);

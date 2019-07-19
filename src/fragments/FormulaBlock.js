@@ -4,6 +4,7 @@ import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
 import { DANGER_COLOR, MAIN_COLOR } from "../constants";
+import { FORMULA_GENERAL, FORMULA_CURRENT } from "../constants/titles";
 
 const styles = {
     formulaBlock: {
@@ -29,13 +30,13 @@ const FormulaBlock = ({ classes, formulaView, axisLabel }) => {
     return (
         <div className={classes.formulaBlock}>
             <div>
-                <Typography variant="body1">Общий вид формулы:</Typography>
+                <Typography variant="body1">{FORMULA_GENERAL}</Typography>
                 <div className={classes.formulaContainer}>
                     <Typography className={classes.formula} variant="h4">{formulaView}</Typography>
                 </div>
             </div>
             <div>
-                <Typography variant="body1">Текущая формула:</Typography>
+                <Typography variant="body1">{FORMULA_CURRENT}</Typography>
                 <div className={classes.formulaContainer}>
                     <Typography className={classes.formula} variant="h4">{axisLabel}</Typography>
                 </div>

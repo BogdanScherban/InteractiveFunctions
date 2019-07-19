@@ -15,7 +15,7 @@ import FactorInput from "../fragments/FactorInput";
 
 import { MAIN_COLOR, colorsArray } from "../constants";
 import { FORMULA_INPUTS } from "../constants/titles";
-import { CHART_LINE } from "../constants/lineTypes";
+import { CHART_ROOT } from "../constants/lineTypes";
 
 const styles = {
     root: {
@@ -23,10 +23,10 @@ const styles = {
     },
 };
 
-const defaultLine = getDefaultLine(CHART_LINE);
-const defaultLinesArray = getDefaultLinesArray(CHART_LINE);
+const defaultLine = getDefaultLine(CHART_ROOT);
+const defaultLinesArray = getDefaultLinesArray(CHART_ROOT);
 
-class LineChartBlock extends Component  {
+class RootChart extends Component  {
 
     state = {
         FACTOR_K: 1,
@@ -49,9 +49,9 @@ class LineChartBlock extends Component  {
         let newLine = [];
         let dataKey = "oy-" + factor_K + '-' + factor_B;
         let randomItem = Math.floor(Math.random() * (9 - 1) + 1);
-        for (let i = -10, j = 0; i <= 10; i++) {
+        for (let i = 0, j = 0; i <= 20; i++) {
             let item = chartData[j];
-            item[dataKey] = Number(factor_K) * i + Number(factor_B);
+            item[dataKey] = Number(factor_K) * Math.sqrt(i) + Number(factor_B);
             newLine.push(item);
             j++;
         }
@@ -98,8 +98,8 @@ class LineChartBlock extends Component  {
         this.setState({
             FACTOR_K: 1,
             FACTOR_B: 0,
-            chartData: getDefaultLine(CHART_LINE),
-            linesArray: getDefaultLinesArray(CHART_LINE),
+            chartData: getDefaultLine(CHART_ROOT),
+            linesArray: getDefaultLinesArray(CHART_ROOT),
             disabledLines: [],
         });
     };
@@ -142,4 +142,4 @@ class LineChartBlock extends Component  {
     }
 };
 
-export default withStyles(styles)(LineChartBlock);
+export default withStyles(styles)(RootChart);

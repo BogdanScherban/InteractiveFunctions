@@ -4,6 +4,7 @@ import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 
 import { DANGER_COLOR, MAIN_COLOR, PAPER_COLOR } from "../constants";
+import { BUTTON_REFRESH, BUTTON_REMOVE } from "../constants/titles";
 
 const styles = {
     toolbar: {
@@ -62,10 +63,10 @@ const Toolbar = ({ classes, cleanChart }) => {
     return (
         <div className={classes.toolbar}>
             <Button type="button" className={classes.resetButton} onClick={() => cleanChart()}>
-                Очистить
+                { BUTTON_REMOVE }
             </Button>
             <Button type="submit" className={classes.updateButton}>
-                Обновить
+                { BUTTON_REFRESH }
             </Button>
         </div>
     )

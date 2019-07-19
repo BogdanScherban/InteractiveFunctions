@@ -15,6 +15,8 @@ import Toolbar from "../fragments/Toolbar";
 import FactorInput from "../fragments/FactorInput";
 
 import { MAIN_COLOR, colorsArray } from "../constants";
+import { FORMULA_INPUTS } from "../constants/titles";
+import { CHART_SQUARE_PARABOLA } from "../constants/lineTypes";
 
 const styles = {
     root: {
@@ -22,8 +24,23 @@ const styles = {
     },
 };
 
-const defaultLine = getDefaultLine('parabola');
-const defaultLinesArray = getDefaultLinesArray('parabola');
+const defaultLine = getDefaultLine(CHART_SQUARE_PARABOLA);
+const defaultLinesArray = getDefaultLinesArray(CHART_SQUARE_PARABOLA);
+
+const FormulaView = () => {
+    return (
+        <span>y = kx<sup>2</sup> + b</span>
+    )
+};
+
+const CurrentFormula = ({ formula }) => {
+    let formulaArray = formula.split('x^2');
+    let result = formula;
+    if (formulaArray.length === 2) {
+        result = <span>{formulaArray[0]}x<sup>2</sup> {formulaArray[1]}</span>
+    }
+    return result;
+};
 
 class ParabolaChart extends Component  {
 
@@ -48,9 +65,6 @@ class ParabolaChart extends Component  {
         let newLine = [];
         let dataKey = "oy-" + factor_K + '-' + factor_B;
         let randomItem = Math.floor(Math.random() * (9 - 1) + 1);
-
-        console.log('chartData', chartData)
-
         for (let i = -10, j = 0; i <= 10; i++) {
             let item = chartData[j];
             item[dataKey] = Number(factor_K) * Math.pow(i, 2) + Number(factor_B);
@@ -61,7 +75,7 @@ class ParabolaChart extends Component  {
         linesArray.push({
             dataKey: dataKey,
             color: color,
-            label: this.getAxisLabel(factor_K, factor_B)
+            label: <CurrentFormula formula={this.getAxisLabel(factor_K, factor_B)} />
         });
         this.setState({
             chartData: newLine,
@@ -87,8 +101,8 @@ class ParabolaChart extends Component  {
         this.setState({
             FACTOR_K: 1,
             FACTOR_B: 0,
-            chartData: getDefaultLine(),
-            linesArray: getDefaultLinesArray(),
+            chartData: getDefaultLine(CHART_SQUARE_PARABOLA),
+            linesArray: getDefaultLinesArray(CHART_SQUARE_PARABOLA),
             disabledLines: [],
         });
     };
@@ -116,9 +130,9 @@ class ParabolaChart extends Component  {
                         <Chart chartData={chartData} linesArray={linesArray} disabledLines={disabledLines} toggleLine={this.toggleLine} />
                     </Grid>
                     <Grid item xs={12} md={6}>
-                        <FormulaBlock formulaView="y = kx^2 + b" axisLabel={this.getAxisLabel(FACTOR_K, FACTOR_B)} />
+                        <FormulaBlock formulaView={<FormulaView />} axisLabel={<CurrentFormula formula={this.getAxisLabel(FACTOR_K, FACTOR_B)} />} />
                         <div>
-                            <Typography variant="body1">Введите значения коэффициентов:</Typography>
+                            <Typography variant="body1">{FORMULA_INPUTS}</Typography>
                             <LocalForm  model="functionParameters" onSubmit={values => this.submitForm(values)}>
                                 <FactorInput
                                     label="K"
