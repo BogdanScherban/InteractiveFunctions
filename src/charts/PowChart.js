@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+
 import get from "lodash/get";
 import { LocalForm } from 'react-redux-form';
 
@@ -15,7 +16,7 @@ import FactorInput from "../fragments/FactorInput";
 
 import { MAIN_COLOR, colorsArray } from "../constants";
 import { FORMULA_INPUTS } from "../constants/titles";
-import { CHART_ROOT } from "../constants/lineTypes";
+import { CHART_POW } from "../constants/lineTypes";
 
 const styles = {
     root: {
@@ -23,28 +24,28 @@ const styles = {
     },
 };
 
-const defaultLine = getDefaultLine(CHART_ROOT);
-const defaultLinesArray = getDefaultLinesArray(CHART_ROOT);
+const defaultLine = getDefaultLine(CHART_POW);
+const defaultLinesArray = getDefaultLinesArray(CHART_POW);
 
 const FormulaView = () => {
     return (
-        <span>y = √x</span>
+        <span>y = a<sup>x</sup></span>
     )
 };
 
 const CurrentFormula = ({ formula }) => {
-    let formulaArray = formula.split('√x');
+    let formulaArray = formula.split('|');
     let result = formula;
     if (formulaArray.length === 2) {
-        result = <span>{formulaArray[0]}√x {formulaArray[1]}</span>
+        result = <span>{formulaArray[0]}<sup>x</sup></span>
     }
     return result;
 };
 
-class RootChart extends Component  {
+class PowChart extends Component  {
 
     state = {
-        FACTOR_K: 1,
+        FACTOR_K: 2,
         chartData: defaultLine,
         linesArray: defaultLinesArray,
         disabledLines: [],
@@ -59,13 +60,13 @@ class RootChart extends Component  {
 
     submitForm = data => {
         const { chartData, linesArray } = this.state;
-        const { factor_K, factor_B } = data;
+        const { factor_K } = data;
         let newLine = [];
-        let dataKey = "oy-" + factor_K + '-' + factor_B;
+        let dataKey = "oy-" + factor_K;
         let randomItem = Math.floor(Math.random() * (9 - 1) + 1);
-        for (let i = 0, j = 0; i <= 20; i++) {
+        for (let i = 0, j = 0; i <= 5; i++) {
             let item = chartData[j];
-            item[dataKey] = Number(factor_K) * Math.sqrt(i) + Number(factor_B);
+            item[dataKey] = Math.pow(factor_K, i);
             newLine.push(item);
             j++;
         }
@@ -73,7 +74,7 @@ class RootChart extends Component  {
         linesArray.push({
             dataKey: dataKey,
             color: color,
-            label: this.getAxisLabel(factor_K, factor_B)
+            label: <CurrentFormula formula={this.getAxisLabel(factor_K)} />
         });
         this.setState({
             chartData: newLine,
@@ -95,24 +96,23 @@ class RootChart extends Component  {
         })
     };
 
+    cleanChart = () => {
+        this.setState({
+            FACTOR_K: 2,
+            chartData: getDefaultLine(CHART_POW),
+            linesArray: getDefaultLinesArray(CHART_POW),
+            disabledLines: [],
+        });
+    };
+
     getAxisLabel = (factor_K) => {
         let result = "y = ";
         if (Number(factor_K) !== 0) {
-            result += (Number(factor_K) !== 1) ? (factor_K + "√x") : "√x";
+            result += factor_K + "|x";
         } else {
             return "y = 0";
         }
         return result;
-    };
-
-    cleanChart = () => {
-        this.setState({
-            FACTOR_K: 1,
-            FACTOR_B: 0,
-            chartData: getDefaultLine(CHART_ROOT),
-            linesArray: getDefaultLinesArray(CHART_ROOT),
-            disabledLines: [],
-        });
     };
 
     render() {
@@ -145,5 +145,4 @@ class RootChart extends Component  {
         )
     }
 };
-
-export default withStyles(styles)(RootChart);
+export default withStyles(styles)(PowChart);

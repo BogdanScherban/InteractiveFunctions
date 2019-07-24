@@ -7,16 +7,19 @@ import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
-import FormGroup from '@material-ui/core/FormGroup';
-import RadioGroup from '@material-ui/core/RadioGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Radio from '@material-ui/core/Radio';
-
 import LineChart from "./charts/LineChart";
+import LineProportionChart from "./charts/LineProportionChart";
 import ParabolaChart from "./charts/ParabolaChart";
 import HyperbolaChart from "./charts/HyperbolaChart";
 import CubeParabolaChart from "./charts/CubeParabolaChart";
 import RootChart from "./charts/RootChart";
+import CosChart from "./charts/CosCharts";
+import SinChart from "./charts/SinChart";
+import TanChart from "./charts/TanCharts";
+import LogChart from "./charts/LogChart";
+import PowChart from "./charts/PowChart";
+
+import FunctionSelector from "./fragments/FunctionSelector";
 
 import { MAIN_COLOR } from "./constants";
 import { MAIN_TITLE, SECOND_TITLE } from "./constants/titles";
@@ -37,15 +40,27 @@ const styles = theme => ({
     },
     expandIcon: {
         color: "#fff",
+    },
+    radioSubGroup: {
+        display: 'inline-block',
+        float: 'left',
+        width: '33%',
     }
 });
 
 const functionTypes = [
     { value: lineTypes.CHART_LINE,            label: lineTypes.CHART_LINE_LABEL,            chart: LineChart },
+    { value: lineTypes.CHART_PROPORTION,      label: lineTypes.CHART_PROPORTION_LABEL,      chart: LineProportionChart },
     { value: lineTypes.CHART_SQUARE_PARABOLA, label: lineTypes.CHART_SQUARE_PARABOLA_LABEL, chart: ParabolaChart },
     { value: lineTypes.CHART_CUBE_PARABOLA,   label: lineTypes.CHART_CUBE_PARABOLA_LABEL,   chart: CubeParabolaChart },
     { value: lineTypes.CHART_HYPERBOLA,       label: lineTypes.CHART_HYPERBOLA_LABEL,       chart: HyperbolaChart },
-    { value: lineTypes.CHART_ROOT,            label: lineTypes.CHART_ROOT_LABEL,            chart: RootChart }
+    { value: lineTypes.CHART_ROOT,            label: lineTypes.CHART_ROOT_LABEL,            chart: RootChart },
+    { value: lineTypes.CHART_SIN,             label: lineTypes.CHART_SIN_LABEL,             chart: SinChart },
+    { value: lineTypes.CHART_COS,             label: lineTypes.CHART_COS_LABEL,             chart: CosChart },
+    { value: lineTypes.CHART_TAN,             label: lineTypes.CHART_TAN_LABEL,             chart: TanChart },
+    { value: lineTypes.CHART_COTAN,           label: lineTypes.CHART_COTAN_LABEL,           chart: null },
+    { value: lineTypes.CHART_LOG,             label: lineTypes.CHART_LOG_LABEL,             chart: LogChart },
+    { value: lineTypes.CHART_POW,             label: lineTypes.CHART_POW_LABEL,             chart: PowChart },
 ];
 
 class App extends Component {
@@ -109,23 +124,13 @@ class App extends Component {
                         <Typography className={classes.panelTitle}>{MAIN_TITLE}</Typography>
                     </ExpansionPanelSummary>
                     <ExpansionPanelDetails>
-                        <FormGroup>
-                            <RadioGroup name="functionType"  value={functionType} onChange={e => this.handleChecking(e)} row>
-                                {functionTypes.map((item, key) => {
-                                    return (
-                                        <FormControlLabel
-                                            key={key}
-                                            value={item.value}
-                                            control={<Radio />}
-                                            label={item.label}
-                                        />
-                                    );
-                                })}
-                            </RadioGroup>
-                        </FormGroup>
+                        <FunctionSelector
+                          functionTypes={functionTypes}
+                          functionType={functionType}
+                          handleChecking={this.handleChecking}
+                        />
                     </ExpansionPanelDetails>
                 </ExpansionPanel>
-
                 <ExpansionPanel className={classes.expansionPanel} expanded={isContentPanelOpen} onChange={() => this.toggleContentPanel()}>
                     <ExpansionPanelSummary className={classes.panelTitleBlock} expandIcon={<ExpandMoreIcon className={classes.expandIcon} />}>
                         <Typography className={classes.panelTitle}>{SECOND_TITLE} {currentFunctionName}</Typography>

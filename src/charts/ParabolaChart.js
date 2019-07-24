@@ -29,7 +29,7 @@ const defaultLinesArray = getDefaultLinesArray(CHART_SQUARE_PARABOLA);
 
 const FormulaView = () => {
     return (
-        <span>y = kx<sup>2</sup> + b</span>
+        <span>y = kx<sup>2</sup></span>
     )
 };
 
@@ -46,7 +46,6 @@ class ParabolaChart extends Component  {
 
     state = {
         FACTOR_K: 1,
-        FACTOR_B: 0,
         chartData: defaultLine,
         linesArray: defaultLinesArray,
         disabledLines: [],
@@ -61,13 +60,13 @@ class ParabolaChart extends Component  {
 
     submitForm = data => {
         const { chartData, linesArray } = this.state;
-        const { factor_K, factor_B } = data;
+        const { factor_K } = data;
         let newLine = [];
-        let dataKey = "oy-" + factor_K + '-' + factor_B;
+        let dataKey = "oy-" + factor_K;
         let randomItem = Math.floor(Math.random() * (9 - 1) + 1);
         for (let i = -10, j = 0; i <= 10; i++) {
             let item = chartData[j];
-            item[dataKey] = Number(factor_K) * Math.pow(i, 2) + Number(factor_B);
+            item[dataKey] = Number(factor_K) * Math.pow(i, 2);
             newLine.push(item);
             j++;
         }
@@ -75,7 +74,7 @@ class ParabolaChart extends Component  {
         linesArray.push({
             dataKey: dataKey,
             color: color,
-            label: <CurrentFormula formula={this.getAxisLabel(factor_K, factor_B)} />
+            label: <CurrentFormula formula={this.getAxisLabel(factor_K)} />
         });
         this.setState({
             chartData: newLine,
@@ -100,29 +99,25 @@ class ParabolaChart extends Component  {
     cleanChart = () => {
         this.setState({
             FACTOR_K: 1,
-            FACTOR_B: 0,
             chartData: getDefaultLine(CHART_SQUARE_PARABOLA),
             linesArray: getDefaultLinesArray(CHART_SQUARE_PARABOLA),
             disabledLines: [],
         });
     };
 
-    getAxisLabel = (factor_K, factor_B) => {
+    getAxisLabel = (factor_K) => {
         let result = "y = ";
         if (Number(factor_K) !== 0) {
             result += (Number(factor_K) !== 1) ? (factor_K + "x^2") : "x^2";
         } else {
-            return "y = " + factor_B;
-        }
-        if (Number(factor_B) !== 0) {
-            result += (factor_B > 0) ? (" + " + factor_B) : (" - " + Math.abs(factor_B));
+            return "y = 0";
         }
         return result;
     };
 
     render() {
         const { classes } = this.props;
-        const { FACTOR_K, FACTOR_B, chartData, linesArray, disabledLines } = this.state;
+        const { FACTOR_K, chartData, linesArray, disabledLines } = this.state;
         return (
             <div className={classes.root}>
                 <Grid container spacing={3}>
@@ -130,7 +125,7 @@ class ParabolaChart extends Component  {
                         <Chart chartData={chartData} linesArray={linesArray} disabledLines={disabledLines} toggleLine={this.toggleLine} />
                     </Grid>
                     <Grid item xs={12} md={6}>
-                        <FormulaBlock formulaView={<FormulaView />} axisLabel={<CurrentFormula formula={this.getAxisLabel(FACTOR_K, FACTOR_B)} />} />
+                        <FormulaBlock formulaView={<FormulaView />} axisLabel={<CurrentFormula formula={this.getAxisLabel(FACTOR_K)} />} />
                         <div>
                             <Typography variant="body1">{FORMULA_INPUTS}</Typography>
                             <LocalForm  model="functionParameters" onSubmit={values => this.submitForm(values)}>
@@ -139,13 +134,6 @@ class ParabolaChart extends Component  {
                                     value="factor_K"
                                     model="functionParameters.factor_K"
                                     defaultValue={FACTOR_K}
-                                    changeFactor={this.changeFactor}
-                                />
-                                <FactorInput
-                                    label="B"
-                                    value="factor_B"
-                                    model="functionParameters.factor_B"
-                                    defaultValue={FACTOR_B}
                                     changeFactor={this.changeFactor}
                                 />
                                 <Toolbar cleanChart={this.cleanChart} />

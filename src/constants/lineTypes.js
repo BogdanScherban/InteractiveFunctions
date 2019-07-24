@@ -1,11 +1,25 @@
 export const CHART_LINE = 'line';
+export const CHART_PROPORTION = 'lineProportion';
 export const CHART_SQUARE_PARABOLA = 'parabola';
 export const CHART_CUBE_PARABOLA = 'cubeParabola';
 export const CHART_HYPERBOLA = 'hyperbola';
 export const CHART_ROOT = 'root';
+export const CHART_SIN = 'sin';
+export const CHART_COS = 'cos';
+export const CHART_TAN = 'tan';
+export const CHART_COTAN = 'cotan';
+export const CHART_LOG = 'log';
+export const CHART_POW = 'exp';
 
 export const CHART_LINE_LABEL = "Лінійна";
+export const CHART_PROPORTION_LABEL = "Пряма пропорційність";
 export const CHART_SQUARE_PARABOLA_LABEL = "Квадратична (окремий випадок)";
 export const CHART_CUBE_PARABOLA_LABEL = "Кубічна (окремий випадок)";
 export const CHART_HYPERBOLA_LABEL = "Обернена пропорційність";
 export const CHART_ROOT_LABEL = 'Корінь квадратний з ікса';
+export const CHART_SIN_LABEL = 'Синус';
+export const CHART_COS_LABEL = 'Косинус';
+export const CHART_TAN_LABEL = 'Тангенс';
+export const CHART_COTAN_LABEL = 'Котангенс';
+export const CHART_LOG_LABEL = 'Логарифмічна';
+export const CHART_POW_LABEL = 'Показникова';

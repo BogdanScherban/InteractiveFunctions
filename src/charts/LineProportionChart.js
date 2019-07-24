@@ -15,7 +15,7 @@ import FactorInput from "../fragments/FactorInput";
 
 import { MAIN_COLOR, colorsArray } from "../constants";
 import { FORMULA_INPUTS } from "../constants/titles";
-import { CHART_ROOT } from "../constants/lineTypes";
+import { CHART_PROPORTION } from "../constants/lineTypes";
 
 const styles = {
     root: {
@@ -23,25 +23,10 @@ const styles = {
     },
 };
 
-const defaultLine = getDefaultLine(CHART_ROOT);
-const defaultLinesArray = getDefaultLinesArray(CHART_ROOT);
+const defaultLine = getDefaultLine(CHART_PROPORTION);
+const defaultLinesArray = getDefaultLinesArray(CHART_PROPORTION);
 
-const FormulaView = () => {
-    return (
-        <span>y = √x</span>
-    )
-};
-
-const CurrentFormula = ({ formula }) => {
-    let formulaArray = formula.split('√x');
-    let result = formula;
-    if (formulaArray.length === 2) {
-        result = <span>{formulaArray[0]}√x {formulaArray[1]}</span>
-    }
-    return result;
-};
-
-class RootChart extends Component  {
+class LineChartBlock extends Component  {
 
     state = {
         FACTOR_K: 1,
@@ -59,13 +44,13 @@ class RootChart extends Component  {
 
     submitForm = data => {
         const { chartData, linesArray } = this.state;
-        const { factor_K, factor_B } = data;
+        const { factor_K } = data;
         let newLine = [];
-        let dataKey = "oy-" + factor_K + '-' + factor_B;
+        let dataKey = "oy-" + factor_K;
         let randomItem = Math.floor(Math.random() * (9 - 1) + 1);
-        for (let i = 0, j = 0; i <= 20; i++) {
+        for (let i = -10, j = 0; i <= 10; i++) {
             let item = chartData[j];
-            item[dataKey] = Number(factor_K) * Math.sqrt(i) + Number(factor_B);
+            item[dataKey] = Number(factor_K) * i;
             newLine.push(item);
             j++;
         }
@@ -73,7 +58,7 @@ class RootChart extends Component  {
         linesArray.push({
             dataKey: dataKey,
             color: color,
-            label: this.getAxisLabel(factor_K, factor_B)
+            label: this.getAxisLabel(factor_K)
         });
         this.setState({
             chartData: newLine,
@@ -98,7 +83,7 @@ class RootChart extends Component  {
     getAxisLabel = (factor_K) => {
         let result = "y = ";
         if (Number(factor_K) !== 0) {
-            result += (Number(factor_K) !== 1) ? (factor_K + "√x") : "√x";
+            result += (Number(factor_K) !== 1) ? (factor_K + "x") : "x";
         } else {
             return "y = 0";
         }
@@ -108,9 +93,8 @@ class RootChart extends Component  {
     cleanChart = () => {
         this.setState({
             FACTOR_K: 1,
-            FACTOR_B: 0,
-            chartData: getDefaultLine(CHART_ROOT),
-            linesArray: getDefaultLinesArray(CHART_ROOT),
+            chartData: getDefaultLine(CHART_PROPORTION),
+            linesArray: getDefaultLinesArray(CHART_PROPORTION),
             disabledLines: [],
         });
     };
@@ -125,7 +109,7 @@ class RootChart extends Component  {
                         <Chart chartData={chartData} linesArray={linesArray} disabledLines={disabledLines} toggleLine={this.toggleLine} />
                     </Grid>
                     <Grid item xs={12} md={6}>
-                        <FormulaBlock formulaView={<FormulaView />} axisLabel={<CurrentFormula formula={this.getAxisLabel(FACTOR_K)} />} />
+                        <FormulaBlock formulaView="y = kx" axisLabel={this.getAxisLabel(FACTOR_K)} />
                         <div>
                             <Typography variant="body1">{FORMULA_INPUTS}</Typography>
                             <LocalForm  model="functionParameters" onSubmit={values => this.submitForm(values)}>
@@ -146,4 +130,4 @@ class RootChart extends Component  {
     }
 };
 
-export default withStyles(styles)(RootChart);
+export default withStyles(styles)(LineChartBlock);
